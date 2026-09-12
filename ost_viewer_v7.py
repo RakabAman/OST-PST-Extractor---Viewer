@@ -51,6 +51,13 @@ except ImportError:
 SCALE_FACTOR = 1.0
 
 # ----------------------------------------------------------------------
+
+def resource_path(rel_path):
+    """Resolve a bundled resource in both source-run and PyInstaller builds."""
+    base = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base, rel_path)
+
+
 # Direct-mode cache root.
 #
 # Preferred location: next to the OST/PST file, in <stem>.viewer/
@@ -2430,8 +2437,16 @@ class MainWindow(QMainWindow):
 # ----------------------------------------------------------------------
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    app.setOrganizationName('OSTMailViewer')
-    app.setApplicationName('OSTMailViewer')
+    app.setOrganizationName('OST/PST Mail Viewer By Rakab Aman')
+    app.setApplicationName('OST/PST Mail Viewer By Rakab Aman')
+
+    # Runtime icon — this is what shows in the titlebar, taskbar,
+    # Alt-Tab, and the window-list. The exe file icon (Explorer view)
+    # is set separately by the .spec's `icon=` parameter.
+    icon_path = resource_path('email.ico')
+    if os.path.exists(icon_path):
+        app.setWindowIcon(QIcon(icon_path))
+
     win = MainWindow()
     win.show()
     sys.exit(app.exec_())
